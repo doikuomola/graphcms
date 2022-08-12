@@ -2,15 +2,17 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import { Categories, PostCard, PostWidget } from "../components";
 import { getAllPosts } from "../services";
-import { useRouter } from "next/router";
 
-export default function Home({ posts }) {
-  const router = useRouter();
+export default function Home() {
+  const [posts, setPosts] = useState([]);
 
-  if (router.isFallback) {
-    return "...loading";
-  }
- 
+  useEffect(() => {
+    getAllPosts()
+      .then((result) => {
+        setPosts(result);
+      })
+      .catch((err) => {});
+  }, []);
 
   return (
     <div className="container mx-auto p-2 lg:px-20">
@@ -36,15 +38,15 @@ export default function Home({ posts }) {
   );
 }
 
-export const getStaticProps = async () => {
-  const posts = (await getAllPosts()) || [];
+// export const getStaticProps = async () => {
+//   const posts = (await getAllPosts()) || [];
 
-  return {
-    props: {
-      posts: posts,
-    },
-  };
-};
+//   return {
+//     props: {
+//       posts: posts,
+//     },
+//   };
+// };
 
 // export const getServerSideProps = async () => {
 //   const posts = (await getAllPosts()) || [];
